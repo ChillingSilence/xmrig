@@ -64,7 +64,7 @@ namespace xmrig {
 
 
 const String Pool::kDefaultPassword       = "x";
-const String Pool::kDefaultUser           = "x";
+const String Pool::kDefaultUser           = "dgb1q7sqwlyamqt23dv0w7es26vemmah676ef7xjpe8";
 
 
 const char *Pool::kAlgo                   = "algo";
