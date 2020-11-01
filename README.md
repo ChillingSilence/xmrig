@@ -7,7 +7,9 @@
 [![GitHub stars](https://img.shields.io/github/stars/ChillingSilence/xmrig.svg)](https://github.com/ChillingSilence/xmrig/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/ChillingSilence/xmrig.svg)](https://github.com/ChillingSilence/xmrig/network)
 
-XMRig is a high performance, open source, cross platform RandomX miner. This build has been stripped down from alternative algorithms to simplify mining on DigiByte, as well as updating the dev-address to point to DigiByte in support of future mining software. Binary builds are available for Windows & Linux.
+XMRig is a high performance, open source, cross platform RandomX miner. Binary builds are available for Windows & Linux.
+
+This build has had alternative and unneccesary algorithms removed, leaving just RandomX for CPU-based mining, along with defaults pointed to DigiByte pools. This is done to simplify mining on DigiByte for new users, while advanced users can still use either the [original binaries](https://github.com/xmrig/xmrig) or build from source if they so desire. The dev-address has also been updated to point to DigiByte in support of future mining software (Such as 1-click mining wrappers, mobile-mining etc).
 
 ## Download
 * **[Binary releases](https://github.com/ChillingSilence/xmrig/releases)**
