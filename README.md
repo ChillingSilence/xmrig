@@ -1,32 +1,21 @@
 # XMRig
 
-[![Github All Releases](https://img.shields.io/github/downloads/xmrig/xmrig/total.svg)](https://github.com/xmrig/xmrig/releases)
-[![GitHub release](https://img.shields.io/github/release/xmrig/xmrig/all.svg)](https://github.com/xmrig/xmrig/releases)
-[![GitHub Release Date](https://img.shields.io/github/release-date/xmrig/xmrig.svg)](https://github.com/xmrig/xmrig/releases)
-[![GitHub license](https://img.shields.io/github/license/xmrig/xmrig.svg)](https://github.com/xmrig/xmrig/blob/master/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/xmrig/xmrig.svg)](https://github.com/xmrig/xmrig/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/xmrig/xmrig.svg)](https://github.com/xmrig/xmrig/network)
+[![Github All Releases](https://img.shields.io/github/downloads/ChillingSilence/xmrig/total.svg)](https://github.com/ChillingSilence/xmrig/releases)
+[![GitHub release](https://img.shields.io/github/release/ChillingSilence/xmrig/all.svg)](https://github.com/ChillingSilence/xmrig/releases)
+[![GitHub Release Date](https://img.shields.io/github/release-date/ChillingSilence/xmrig.svg)](https://github.com/ChillingSilence/xmrig/releases)
+[![GitHub license](https://img.shields.io/github/license/ChillingSilence/xmrig.svg)](https://github.com/ChillingSilence/xmrig/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ChillingSilence/xmrig.svg)](https://github.com/ChillingSilence/xmrig/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/ChillingSilence/xmrig.svg)](https://github.com/ChillingSilence/xmrig/network)
 
-XMRig is a high performance, open source, cross platform RandomX, KawPow, CryptoNight and AstroBWT unified CPU/GPU miner. Official binaries are available for Windows, Linux, macOS and FreeBSD.
-
-## Mining backends
-- **CPU** (x64/ARMv8)
-- **OpenCL** for AMD GPUs.
-- **CUDA** for NVIDIA GPUs via external [CUDA plugin](https://github.com/xmrig/xmrig-cuda).
+XMRig is a high performance, open source, cross platform RandomX miner. This build has been stripped down from alternative algorithms to simplify mining on DigiByte, as well as updating the dev-address to point to DigiByte in support of future mining software. Binary builds are available for Windows & Linux.
 
 ## Download
-* **[Binary releases](https://github.com/xmrig/xmrig/releases)**
+* **[Binary releases](https://github.com/ChillingSilence/xmrig/releases)**
 * **[Build from source](https://xmrig.com/docs/miner/build)**
 
 ## Usage
-The preferred way to configure the miner is the [JSON config file](src/config.json) as it is more flexible and human friendly. The [command line interface](https://xmrig.com/docs/miner/command-line-options) does not cover all features, such as mining profiles for different algorithms. Important options can be changed during runtime without miner restart by editing the config file or executing API calls.
-
-* **[Wizard](https://xmrig.com/wizard)** helps you create initial configuration for the miner.
-* **[Workers](http://workers.xmrig.info)** helps manage your miners via HTTP API.
-
-## Donations
-* Default donation 1% (1 minute in 100 minutes) can be increased via option `donate-level` or disabled in source code.
-* XMR: `48edfHu7V9Z84YzzMa6fUueoELZ9ZRXq9VetWzYGzKt52XU5xvqgzYnDK9URnRoJMk1j8nLwEVsaSWJ4fhdUyZijBGUicoD`
+Simply download for your OS, extract the zip / tarball, modify the start file to point to your address, and then run "start".
+There are more advanced options available by configuring the JSON config file if you so-desire however most users won't need to.
 
 ## Developers
 * **[xmrig](https://github.com/xmrig)**
