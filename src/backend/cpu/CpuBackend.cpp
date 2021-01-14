@@ -56,7 +56,8 @@
 
 
 #ifdef XMRIG_FEATURE_BENCHMARK
-#   include "backend/common/Benchmark.h"
+#   include "backend/common/benchmark/Benchmark.h"
+#   include "backend/common/benchmark/BenchState.h"
 #endif
 
 
@@ -138,10 +139,7 @@ private:
 class CpuBackendPrivate
 {
 public:
-    inline CpuBackendPrivate(Controller *controller) :
-        controller(controller)
-    {
-    }
+    inline CpuBackendPrivate(Controller *controller) : controller(controller)   {}
 
 
     inline void start()
@@ -155,7 +153,12 @@ public:
                  );
 
         status.start(threads, algo.l3());
+
+#       ifdef XMRIG_FEATURE_BENCHMARK
+        workers.start(threads, benchmark);
+#       else
         workers.start(threads);
+#       endif
     }
 
 
@@ -204,6 +207,10 @@ public:
     std::vector<CpuLaunchData> threads;
     String profileName;
     Workers<CpuLaunchData> workers;
+
+#   ifdef XMRIG_FEATURE_BENCHMARK
+    std::shared_ptr<Benchmark> benchmark;
+#   endif
 };
 
 
@@ -259,6 +266,12 @@ bool xmrig::CpuBackend::isEnabled(const Algorithm &algorithm) const
 }
 
 
+bool xmrig::CpuBackend::tick(uint64_t ticks)
+{
+    return d_ptr->workers.tick(ticks);
+}
+
+
 const xmrig::Hashrate *xmrig::CpuBackend::hashrate() const
 {
     return d_ptr->workers.hashrate();
@@ -309,9 +322,9 @@ void xmrig::CpuBackend::printHashrate(bool details)
          Log::print("| %8zu | %8" PRId64 " | %7s | %7s | %7s |",
                     i,
                     data.affinity,
-                    Hashrate::format(hashrate()->calc(i + 1, Hashrate::ShortInterval),  num,         sizeof num / 3),
-                    Hashrate::format(hashrate()->calc(i + 1, Hashrate::MediumInterval), num + 8,     sizeof num / 3),
-                    Hashrate::format(hashrate()->calc(i + 1, Hashrate::LargeInterval),  num + 8 * 2, sizeof num / 3)
+                    Hashrate::format(hashrate()->calc(i, Hashrate::ShortInterval),  num,         sizeof num / 3),
+                    Hashrate::format(hashrate()->calc(i, Hashrate::MediumInterval), num + 8,     sizeof num / 3),
+                    Hashrate::format(hashrate()->calc(i, Hashrate::LargeInterval),  num + 8 * 2, sizeof num / 3)
                     );
 
          i++;
@@ -338,9 +351,9 @@ void xmrig::CpuBackend::setJob(const Job &job)
         return stop();
     }
 
-    const CpuConfig &cpu = d_ptr->controller->config()->cpu();
+    const auto &cpu = d_ptr->controller->config()->cpu();
 
-    std::vector<CpuLaunchData> threads = cpu.get(d_ptr->controller->miner(), job.algorithm(), d_ptr->controller->config()->pools().benchSize());
+    auto threads = cpu.get(d_ptr->controller->miner(), job.algorithm());
     if (!d_ptr->threads.empty() && d_ptr->threads.size() == threads.size() && std::equal(d_ptr->threads.begin(), d_ptr->threads.end(), threads.begin())) {
         return;
     }
@@ -355,6 +368,12 @@ void xmrig::CpuBackend::setJob(const Job &job)
     }
 
     stop();
+
+#   ifdef XMRIG_FEATURE_BENCHMARK
+    if (BenchState::size()) {
+        d_ptr->benchmark = std::make_shared<Benchmark>(threads.size(), this);
+    }
+#   endif
 
     d_ptr->threads = std::move(threads);
     d_ptr->start();
@@ -392,12 +411,6 @@ void xmrig::CpuBackend::stop()
 }
 
 
-bool xmrig::CpuBackend::tick(uint64_t ticks)
-{
-    return d_ptr->workers.tick(ticks);
-}
-
-
 #ifdef XMRIG_FEATURE_API
 rapidjson::Value xmrig::CpuBackend::toJSON(rapidjson::Document &doc) const
 {
@@ -412,6 +425,7 @@ rapidjson::Value xmrig::CpuBackend::toJSON(rapidjson::Document &doc) const
     out.AddMember("profile",    profileName().toJSON(), allocator);
     out.AddMember("hw-aes",     cpu.isHwAES(), allocator);
     out.AddMember("priority",   cpu.priority(), allocator);
+    out.AddMember("msr",        Rx::isMSR(), allocator);
 
 #   ifdef XMRIG_FEATURE_ASM
     const Assembly assembly = Cpu::assembly(cpu.assembly());
@@ -469,15 +483,14 @@ void xmrig::CpuBackend::handleRequest(IApiRequest &request)
 #ifdef XMRIG_FEATURE_BENCHMARK
 xmrig::Benchmark *xmrig::CpuBackend::benchmark() const
 {
-    return d_ptr->workers.benchmark();
+    return d_ptr->benchmark.get();
 }
 
 
 void xmrig::CpuBackend::printBenchProgress() const
 {
-    auto benchmark = d_ptr->workers.benchmark();
-    if (benchmark) {
-        benchmark->printProgress();
+    if (d_ptr->benchmark) {
+        d_ptr->benchmark->printProgress();
     }
 }
 #endif

@@ -79,6 +79,11 @@ public:
         PauseOnBatteryKey    = 1041,
         StressKey            = 1042,
         BenchKey             = 1043,
+        BenchSubmitKey       = 1044,
+        BenchVerifyKey       = 1045,
+        BenchSeedKey         = 1046,
+        BenchHashKey         = 1047,
+        BenchTokenKey        = 1048,
 
         // xmrig common
         CPUPriorityKey       = 1021,

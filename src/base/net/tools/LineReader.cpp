@@ -1,6 +1,7 @@
 /* XMRig
- * Copyright 2018-2020 SChernykh   <https://github.com/SChernykh>
- * Copyright 2016-2020 XMRig       <https://github.com/xmrig>, <support@xmrig.com>
+ * Copyright (c) 2020      cohcho      <https://github.com/cohcho>
+ * Copyright (c) 2018-2020 SChernykh   <https://github.com/SChernykh>
+ * Copyright (c) 2016-2020 XMRig       <https://github.com/xmrig>, <support@xmrig.com>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,8 +19,9 @@
 
 
 #include "base/net/tools/LineReader.h"
-#include "base/net/tools/NetBuffer.h"
+#include "base/kernel/constants.h"
 #include "base/kernel/interfaces/ILineListener.h"
+#include "base/net/tools/NetBuffer.h"
 
 #include <cassert>
 #include <cstring>
@@ -54,8 +56,8 @@ void xmrig::LineReader::reset()
 
 void xmrig::LineReader::add(const char *data, size_t size)
 {
-    if (size > NetBuffer::kChunkSize - m_pos) {
-        // it breakes correctness silently for long lines
+    if (size + m_pos > XMRIG_NET_BUFFER_CHUNK_SIZE) {
+        // it breaks correctness silently for long lines
         return;
     }
 
